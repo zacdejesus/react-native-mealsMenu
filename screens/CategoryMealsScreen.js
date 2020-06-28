@@ -1,27 +1,47 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, Platform } from 'react-native';
 
-import { CATEGORIES } from '../data/dummy-data';
-import  Colors  from '../constants/Colors';
+import { CATEGORIES, MEALS } from '../data/dummy-data';
+import Colors from '../constants/Colors';
+import MealItem from '../components/MealItem';
+import { FlatList } from 'react-native-gesture-handler';
 
 
 const CategoryMealScreen = props => {
-    const catId =  props.navigation.getParam('categoryId');
-     
+    const renderMealItem = itemData => {
+        return <MealItem 
+            title={itemData.item.title}
+            image={itemData.item.imageUrl}
+            duration={itemData.item.duration}
+            complexity={itemData.item.complexity}
+            affordability={itemData.item.affordability} 
+            onSelectMeal={() => {
+                props.navigation.navigate({
+                    routeName: 'MealDetail', 
+                    params: {
+                        mealId: itemData.item.id
+                }})
+            }} 
+        />
+    };
+
+    const catId = props.navigation.getParam('categoryId');
+
+    const displayMeals = MEALS.filter(
+        meal => meal.categoryIds.indexOf(catId) >= 0
+    );
+
+
     const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
 
     return (
-        <View style={styles.screen }>
-            <Text> the categoies Screen!</Text>
-            <Text>{selectedCategory.title}</Text>
-            <Button  title="Go to Details" onPress={() => {
-                props.navigation.navigate({
-                    routeName: 'MealDetail'
-                });
-            }} />
-            <Button title="Go back" onPress= {() => {
-                props.navigation.pop();
-            }} />
+        <View style={styles.screen}>
+            <FlatList
+                data={displayMeals}
+                keyExtractor={(item, index) => item.id}
+                renderItem={renderMealItem}
+                style={{ width: '100%' }}
+            />
         </View>
     );
 };
@@ -32,10 +52,10 @@ CategoryMealScreen.navigationOptions = navigationData => {
 
     const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
     console.log(selectedCategory.title)
-    return { 
+    return {
         headerTitle: selectedCategory.title,
         headerStyle: {
-            backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white' 
+            backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : 'white'
         },
         headerTintColor: Platform.OS === 'android' ? 'white' : 'black'
     };
@@ -45,7 +65,7 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center' 
+        alignItems: 'center'
     }
 });
 
