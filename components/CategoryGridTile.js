@@ -7,7 +7,7 @@ const CategoryGridTile = props => {
             <View style={{...styles.container, ...{backgroundColor: props.color}}}>
                 <Text>{props.title}</Text>
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity>  
     );
 };
 
@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 1,
         height: 150,
-        padding: 10
+        padding: 10,
+        elevation: 3
     },
     container: {
         flex: 1,
@@ -25,7 +26,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.26,
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 10,
-        elevation: 3,
         padding: 3,
         justifyContent: 'flex-end',
         alignItems: 'flex-end'
